@@ -4,13 +4,31 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4><i class="bi bi-truck"></i> 供应商提交管理</h4>
     <div>
+        <a href="{{ url_for('supplier.create_supplier_account') }}" class="btn btn-success btn-sm"><i class="bi bi-plus-lg"></i> 新建供应商+账户</a>
         <a href="{{ url_for('supplier.manage_suppliers') }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-people"></i> 供应商档案</a>
         <a href="{{ url_for('supplier.manage_users') }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-person-gear"></i> 用户管理</a>
     </div>
 </div>
 <form class="row g-2 mb-3" method="GET">
-    <div class="col-md-4"><input type="text" name="search" class="form-control" placeholder="搜索标题/类型..." value="{{ search }}"></div>
-    <div class="col-auto"><button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i> 搜索</button></div>
+    <div class="col-md-3"><input type="text" name="search" class="form-control" placeholder="搜索标题/类型..." value="{{ search }}"></div>
+    <div class="col-md-2">
+        <select name="supplier_id" class="form-select">
+            <option value="">全部供应商</option>
+            {% for s in suppliers %}
+            <option value="{{ s.id }}" {{ 'selected' if filter_supplier==s.id|string }}>{{ s.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select name="status" class="form-select">
+            <option value="">全部状态</option>
+            <option value="submitted" {{ 'selected' if filter_status=='submitted' }}>待审核</option>
+            <option value="reviewed" {{ 'selected' if filter_status=='reviewed' }}>已审核</option>
+            <option value="approved" {{ 'selected' if filter_status=='approved' }}>已批准</option>
+            <option value="rejected" {{ 'selected' if filter_status=='rejected' }}>已驳回</option>
+        </select>
+    </div>
+    <div class="col-auto"><button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i> 筛选</button></div>
 </form>
 <table class="table table-hover table-bordered">
     <thead class="table-light">
@@ -33,7 +51,7 @@
 </table>
 {% if submissions.pages > 1 %}
 <nav><ul class="pagination">
-    {% for p in submissions.iter_pages() %}{% if p %}<li class="page-item {{ 'active' if p==submissions.page }}"><a class="page-link" href="?page={{ p }}&search={{ search }}">{{ p }}</a></li>{% else %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}{% endfor %}
+    {% for p in submissions.iter_pages() %}{% if p %}<li class="page-item {{ 'active' if p==submissions.page }}"><a class="page-link" href="?page={{ p }}&search={{ search }}&supplier_id={{ filter_supplier }}&status={{ filter_status }}">{{ p }}</a></li>{% else %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}{% endfor %}
 </ul></nav>
 {% endif %}
 {% endblock %}

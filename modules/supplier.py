@@ -18,19 +18,27 @@ def portal():
         supplier_info = Supplier.query.get(current_user.supplier_id)
         return render_template('supplier/portal.html', submissions=submissions,
                                supplier=supplier_info, modules=modules)
-    # 管理员/内部人员看全部
+    # 管理员/内部人员看全部，支持按供应商和状态筛选
     page = request.args.get('page', 1, type=int)
     search = request.args.get('search', '').strip()
+    filter_supplier = request.args.get('supplier_id', '').strip()
+    filter_status = request.args.get('status', '').strip()
     query = SupplierSubmission.query
     if search:
         query = query.filter(
             SupplierSubmission.title.contains(search) |
             SupplierSubmission.submission_type.contains(search)
         )
+    if filter_supplier:
+        query = query.filter(SupplierSubmission.supplier_id == int(filter_supplier))
+    if filter_status:
+        query = query.filter(SupplierSubmission.status == filter_status)
     submissions = query.order_by(SupplierSubmission.created_at.desc()).paginate(page=page, per_page=20)
-    suppliers = Supplier.query.filter_by(is_active=True).order_by(Supplier.name).all()
+    all_suppliers = Supplier.query.filter_by(is_active=True).order_by(Supplier.name).all()
     return render_template('supplier/admin_list.html', submissions=submissions,
-                           search=search, suppliers=suppliers, modules=modules)
+                           search=search, suppliers=all_suppliers,
+                           filter_supplier=filter_supplier, filter_status=filter_status,
+                           modules=modules)
 
 # ── 供应商提交新数据 ──
 @supplier_bp.route('/submit', methods=['GET', 'POST'])
@@ -72,8 +80,15 @@ def review(id):
 @login_required
 @role_required('admin')
 def manage_suppliers():
+    from models import User
     all_suppliers = Supplier.query.order_by(Supplier.name).all()
+    # 获取每个供应商的用户账户
+    supplier_users = {}
+    for s in all_suppliers:
+        users = User.query.filter_by(supplier_id=s.id).all()
+        supplier_users[s.id] = users
     return render_template('supplier/manage.html', suppliers=all_suppliers,
+                           supplier_users=supplier_users,
                            modules=get_allowed_modules(current_user))
 
 @supplier_bp.route('/manage-suppliers/new', methods=['GET', 'POST'])
@@ -177,3 +192,40 @@ def toggle_user(id):
         db.session.commit()
         flash('用户状态已更新', 'success')
     return redirect(url_for('supplier.manage_users'))
+
+# ── 一键创建供应商 + 登录账户 ──
+@supplier_bp.route('/create-supplier-account', methods=['GET', 'POST'])
+@login_required
+@role_required('admin')
+def create_supplier_account():
+    if request.method == 'POST':
+        # 1. 创建供应商
+        supplier = Supplier(
+            code=request.form['code'],
+            name=request.form['name'],
+            contact_person=request.form.get('contact_person', ''),
+            contact_phone=request.form.get('contact_phone', ''),
+            contact_email=request.form.get('contact_email', ''),
+            address=request.form.get('address', '')
+        )
+        db.session.add(supplier)
+        db.session.flush()  # 获取 supplier.id
+
+        # 2. 创建登录账户
+        from models import User
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+        if username and password:
+            user = User(
+                username=username,
+                display_name=request.form.get('display_name', supplier.name),
+                role='supplier',
+                supplier_id=supplier.id
+            )
+            user.set_password(password)
+            db.session.add(user)
+
+        db.session.commit()
+        flash(f'供应商「{supplier.name}」及登录账户创建成功', 'success')
+        return redirect(url_for('supplier.manage_suppliers'))
+    return render_template('supplier/create_account.html', modules=get_allowed_modules(current_user))

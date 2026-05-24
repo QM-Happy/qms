@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}新建供应商 + 登录账户{% endblock %}
+{% block content %}
+<h4><i class="bi bi-person-plus"></i> 新建供应商 + 登录账户</h4>
+<hr>
+
+<form method="POST" class="row g-3">
+    <!-- 供应商信息 -->
+    <div class="col-12"><h6 class="text-primary border-bottom pb-1">供应商信息</h6></div>
+    <div class="col-md-3">
+        <label class="form-label">供应商编号 <span class="text-danger">*</span></label>
+        <input type="text" name="code" class="form-control" placeholder="如 SUP002" required>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">供应商名称 <span class="text-danger">*</span></label>
+        <input type="text" name="name" class="form-control" placeholder="公司全称" required>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">联系人</label>
+        <input type="text" name="contact_person" class="form-control">
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">联系电话</label>
+        <input type="text" name="contact_phone" class="form-control">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">邮箱</label>
+        <input type="email" name="contact_email" class="form-control">
+    </div>
+    <div class="col-md-8">
+        <label class="form-label">地址</label>
+        <input type="text" name="address" class="form-control">
+    </div>
+
+    <!-- 登录账户 -->
+    <div class="col-12 mt-3"><h6 class="text-success border-bottom pb-1">登录账户设置</h6></div>
+    <div class="col-md-3">
+        <label class="form-label">登录用户名 <span class="text-danger">*</span></label>
+        <input type="text" name="username" class="form-control" placeholder="英文用户名" required>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">显示名称</label>
+        <input type="text" name="display_name" class="form-control" placeholder="如：XX公司王经理">
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">初始密码 <span class="text-danger">*</span></label>
+        <input type="text" name="password" class="form-control" value="supplier123" required>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label mt-4 pt-2">
+            <span class="text-muted small">供应商登录后将只能看到自己的数据</span>
+        </label>
+    </div>
+
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> 创建供应商及账户</button>
+        <a href="{{ url_for('supplier.manage_suppliers') }}" class="btn btn-secondary">取消</a>
+    </div>
+</form>
+{% endblock %}

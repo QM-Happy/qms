@@ -4,25 +4,36 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4><i class="bi bi-people"></i> 供应商档案</h4>
     <div>
-        <a href="{{ url_for('supplier.new_supplier') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> 添加供应商</a>
+        <a href="{{ url_for('supplier.create_supplier_account') }}" class="btn btn-success"><i class="bi bi-plus-lg"></i> 新建供应商+账户</a>
+        <a href="{{ url_for('supplier.new_supplier') }}" class="btn btn-outline-primary"><i class="bi bi-plus"></i> 仅添加档案</a>
         <a href="{{ url_for('supplier.portal') }}" class="btn btn-outline-secondary">返回</a>
     </div>
 </div>
 <table class="table table-hover table-bordered">
     <thead class="table-light">
-        <tr><th>编号</th><th>名称</th><th>联系人</th><th>电话</th><th>邮箱</th><th>状态</th><th>操作</th></tr>
+        <tr><th>编号</th><th>名称</th><th>联系人</th><th>电话</th><th>邮箱</th><th>登录账户</th><th>状态</th><th>操作</th></tr>
     </thead>
     <tbody>
         {% for s in suppliers %}
         <tr>
             <td>{{ s.code }}</td><td>{{ s.name }}</td><td>{{ s.contact_person }}</td>
             <td>{{ s.contact_phone }}</td><td>{{ s.contact_email }}</td>
+            <td>
+                {% set accounts = supplier_users.get(s.id, []) %}
+                {% if accounts %}
+                    {% for u in accounts %}
+                    <span class="badge bg-success">{{ u.username }}</span>
+                    {% endfor %}
+                {% else %}
+                    <span class="text-muted">无账户</span>
+                {% endif %}
+            </td>
             <td><span class="badge bg-{{ 'success' if s.is_active else 'secondary' }}">{{ '活跃' if s.is_active else '停用' }}</span></td>
             <td>
                 <a href="{{ url_for('supplier.edit_supplier', id=s.id) }}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
             </td>
         </tr>
-        {% else %}<tr><td colspan="7" class="text-center text-muted">暂无供应商</td></tr>{% endfor %}
+        {% else %}<tr><td colspan="8" class="text-center text-muted">暂无供应商</td></tr>{% endfor %}
     </tbody>
 </table>
 {% endblock %}
