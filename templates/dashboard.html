@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}仪表盘 - QMS{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-1 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="bi bi-speedometer2"></i> 仪表盘</h1>
+</div>
+
+<div class="row g-3">
+    {% if 'iqc' in modules %}
+    <div class="col-xl-3 col-md-4 col-sm-6">
+        <div class="card border-primary h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-box-seam text-primary" style="font-size: 2rem;"></i>
+                <h5 class="card-title mt-2">IQC 来料检验</h5>
+                <p class="card-text small text-muted">来料检验记录管理</p>
+                <a href="{{ url_for('iqc.list_records') }}" class="btn btn-outline-primary btn-sm">进入模块</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if 'fqc' in modules %}
+    <div class="col-xl-3 col-md-4 col-sm-6">
+        <div class="card border-success h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-check2-circle text-success" style="font-size: 2rem;"></i>
+                <h5 class="card-title mt-2">FQC 最终检验</h5>
+                <p class="card-text small text-muted">成品检验记录管理</p>
+                <a href="{{ url_for('fqc.list_records') }}" class="btn btn-outline-success btn-sm">进入模块</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if 'quality_issues' in modules %}
+    <div class="col-xl-3 col-md-4 col-sm-6">
+        <div class="card border-warning h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-exclamation-triangle text-warning" style="font-size: 2rem;"></i>
+                <h5 class="card-title mt-2">质量问题</h5>
+                <p class="card-text small text-muted">内外部质量问题追踪</p>
+                <a href="{{ url_for('quality_issues.list_issues') }}" class="btn btn-outline-warning btn-sm">进入模块</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if 'certification' in modules %}
+    <div class="col-xl-3 col-md-4 col-sm-6">
+        <div class="card border-info h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-patch-check text-info" style="font-size: 2rem;"></i>
+                <h5 class="card-title mt-2">认证与测试</h5>
+                <p class="card-text small text-muted">认证测试报告管理</p>
+                <a href="{{ url_for('certification.list_records') }}" class="btn btn-outline-info btn-sm">进入模块</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if 'sealed_samples' in modules %}
+    <div class="col-xl-3 col-md-4 col-sm-6">
+        <div class="card border-secondary h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-archive text-secondary" style="font-size: 2rem;"></i>
+                <h5 class="card-title mt-2">封样管理</h5>
+                <p class="card-text small text-muted">封样记录与追踪</p>
+                <a href="{{ url_for('sealed_samples.list_samples') }}" class="btn btn-outline-secondary btn-sm">进入模块</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if 'data_entry' in modules %}
+    <div class="col-xl-3 col-md-4 col-sm-6">
+        <div class="card border-dark h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-journal-text text-dark" style="font-size: 2rem;"></i>
+                <h5 class="card-title mt-2">数据录入</h5>
+                <p class="card-text small text-muted">通用数据录入管理</p>
+                <a href="{{ url_for('data_entry.list_entries') }}" class="btn btn-outline-dark btn-sm">进入模块</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if 'supplier' in modules %}
+    <div class="col-xl-3 col-md-4 col-sm-6">
+        <div class="card border-danger h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-truck text-danger" style="font-size: 2rem;"></i>
+                <h5 class="card-title mt-2">委外供应商</h5>
+                <p class="card-text small text-muted">供应商门户与数据</p>
+                <a href="{{ url_for('supplier.portal') }}" class="btn btn-outline-danger btn-sm">进入模块</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if 'nexfactory' in modules %}
+    <div class="col-xl-3 col-md-4 col-sm-6">
+        <div class="card border-primary h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-building text-primary" style="font-size: 2rem;"></i>
+                <h5 class="card-title mt-2">Nexfactory</h5>
+                <p class="card-text small text-muted">Nexfactory 数据管理</p>
+                <a href="{{ url_for('nexfactory.index') }}" class="btn btn-outline-primary btn-sm">进入模块</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}数据录入{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4><i class="bi bi-journal-text"></i> 数据录入</h4>
+    <a href="{{ url_for('data_entry.new_entry') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> 新建录入</a>
+</div>
+<form class="row g-2 mb-3" method="GET">
+    <div class="col-md-4"><input type="text" name="search" class="form-control" placeholder="搜索标题/分类..." value="{{ search }}"></div>
+    <div class="col-auto"><button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i> 搜索</button></div>
+</form>
+<table class="table table-hover table-bordered">
+    <thead class="table-light">
+        <tr><th>分类</th><th>标题</th><th>日期</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+        {% for e in entries.items %}
+        <tr>
+            <td><span class="badge bg-secondary">{{ e.entry_category }}</span></td>
+            <td>{{ e.title }}</td><td>{{ e.entry_date }}</td>
+            <td>
+                <a href="{{ url_for('data_entry.edit_entry', id=e.id) }}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
+                <form method="POST" action="{{ url_for('data_entry.delete_entry', id=e.id) }}" style="display:inline" data-confirm="确认删除？">
+                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+        {% else %}<tr><td colspan="4" class="text-center text-muted">暂无数据</td></tr>{% endfor %}
+    </tbody>
+</table>
+{% if entries.pages > 1 %}
+<nav><ul class="pagination">
+    {% for p in entries.iter_pages() %}{% if p %}<li class="page-item {{ 'active' if p==entries.page }}"><a class="page-link" href="?page={{ p }}&search={{ search }}">{{ p }}</a></li>{% else %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}{% endfor %}
+</ul></nav>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}{% if record %}编辑{% else %}新建{% endif %} IQC 记录{% endblock %}
+{% block content %}
+<h4>{% if record %}编辑{% else %}新建{% endif %} IQC 来料检验记录</h4>
+<hr>
+<form method="POST" class="row g-3">
+    <div class="col-md-4">
+        <label class="form-label">记录编号 <span class="text-danger">*</span></label>
+        <input type="text" name="record_no" class="form-control" value="{{ record.record_no if record else '' }}" required>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">供应商</label>
+        <select name="supplier_id" class="form-select">
+            <option value="">-- 选择供应商 --</option>
+            {% for s in suppliers %}
+            <option value="{{ s.id }}" {{ 'selected' if record and record.supplier_id==s.id }}>{{ s.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">物料名称 <span class="text-danger">*</span></label>
+        <input type="text" name="material_name" class="form-control" value="{{ record.material_name if record else '' }}" required>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">物料编码</label>
+        <input type="text" name="material_code" class="form-control" value="{{ record.material_code if record else '' }}">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">批次号</label>
+        <input type="text" name="batch_no" class="form-control" value="{{ record.batch_no if record else '' }}">
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">数量</label>
+        <input type="number" step="any" name="quantity" class="form-control" value="{{ record.quantity if record else '' }}">
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">抽检数</label>
+        <input type="number" step="any" name="sample_qty" class="form-control" value="{{ record.sample_qty if record else '' }}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">检验结果</label>
+        <select name="inspection_result" class="form-select">
+            <option value="">-- 选择 --</option>
+            <option value="pass" {{ 'selected' if record and record.inspection_result=='pass' }}>合格</option>
+            <option value="fail" {{ 'selected' if record and record.inspection_result=='fail' }}>不合格</option>
+            <option value="conditional" {{ 'selected' if record and record.inspection_result=='conditional' }}>条件接受</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">检验员</label>
+        <input type="text" name="inspector" class="form-control" value="{{ record.inspector if record else '' }}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">检验日期</label>
+        <input type="date" name="inspection_date" class="form-control" value="{{ record.inspection_date if record else '' }}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">备注</label>
+        <input type="text" name="remark" class="form-control" value="{{ record.remark if record else '' }}">
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> 保存</button>
+        <a href="{{ url_for('iqc.list_records') }}" class="btn btn-secondary">取消</a>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{% if entry %}编辑{% else %}新建{% endif %} 数据录入{% endblock %}
+{% block content %}
+<h4>{% if entry %}编辑{% else %}新建{% endif %} 数据录入</h4><hr>
+<form method="POST" class="row g-3">
+    <div class="col-md-4"><label class="form-label">分类 <span class="text-danger">*</span></label><input type="text" name="entry_category" class="form-control" value="{{ entry.entry_category if entry else '' }}" required></div>
+    <div class="col-md-4"><label class="form-label">标题 <span class="text-danger">*</span></label><input type="text" name="title" class="form-control" value="{{ entry.title if entry else '' }}" required></div>
+    <div class="col-md-4"><label class="form-label">日期</label><input type="date" name="entry_date" class="form-control" value="{{ entry.entry_date if entry else '' }}"></div>
+    <div class="col-12"><label class="form-label">内容</label><textarea name="content" class="form-control" rows="6">{{ entry.content if entry else '' }}</textarea></div>
+    <div class="col-12"><button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> 保存</button> <a href="{{ url_for('data_entry.list_entries') }}" class="btn btn-secondary">取消</a></div>
+</form>
+{% endblock %}

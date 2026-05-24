@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{% if issue %}编辑{% else %}新建{% endif %} 质量问题{% endblock %}
+{% block content %}
+<h4>{% if issue %}编辑{% else %}新建{% endif %} 质量问题</h4><hr>
+<form method="POST" class="row g-3">
+    <div class="col-md-3"><label class="form-label">问题编号 <span class="text-danger">*</span></label><input type="text" name="issue_no" class="form-control" value="{{ issue.issue_no if issue else '' }}" required></div>
+    <div class="col-md-3"><label class="form-label">问题类型</label>
+        <select name="issue_type" class="form-select">
+            <option value="internal" {{ 'selected' if issue and issue.issue_type=='internal' }}>内部问题</option>
+            <option value="external" {{ 'selected' if issue and issue.issue_type=='external' }}>外部问题</option>
+            <option value="customer_complaint" {{ 'selected' if issue and issue.issue_type=='customer_complaint' }}>客户投诉</option>
+        </select>
+    </div>
+    <div class="col-md-3"><label class="form-label">来源</label><input type="text" name="source" class="form-control" value="{{ issue.source if issue else '' }}"></div>
+    <div class="col-md-3"><label class="form-label">产品名称</label><input type="text" name="product_name" class="form-control" value="{{ issue.product_name if issue else '' }}"></div>
+    <div class="col-12"><label class="form-label">问题描述 <span class="text-danger">*</span></label><textarea name="description" class="form-control" rows="3" required>{{ issue.description if issue else '' }}</textarea></div>
+    <div class="col-md-3"><label class="form-label">严重度</label>
+        <select name="severity" class="form-select">
+            <option value="">-- 选择 --</option>
+            <option value="critical" {{ 'selected' if issue and issue.severity=='critical' }}>严重</option>
+            <option value="major" {{ 'selected' if issue and issue.severity=='major' }}>主要</option>
+            <option value="minor" {{ 'selected' if issue and issue.severity=='minor' }}>次要</option>
+        </select>
+    </div>
+    <div class="col-md-3"><label class="form-label">状态</label>
+        <select name="status" class="form-select">
+            <option value="open" {{ 'selected' if issue and issue.status=='open' }}>处理中</option>
+            <option value="investigating" {{ 'selected' if issue and issue.status=='investigating' }}>调查中</option>
+            <option value="closed" {{ 'selected' if issue and issue.status=='closed' }}>已关闭</option>
+        </select>
+    </div>
+    <div class="col-md-3"><label class="form-label">责任人</label><input type="text" name="responsible_person" class="form-control" value="{{ issue.responsible_person if issue else '' }}"></div>
+    <div class="col-md-3"><label class="form-label">报告日期</label><input type="date" name="reported_date" class="form-control" value="{{ issue.reported_date if issue else '' }}"></div>
+    <div class="col-md-3"><label class="form-label">关闭日期</label><input type="date" name="closed_date" class="form-control" value="{{ issue.closed_date if issue else '' }}"></div>
+    <div class="col-12"><label class="form-label">根本原因</label><textarea name="root_cause" class="form-control" rows="2">{{ issue.root_cause if issue else '' }}</textarea></div>
+    <div class="col-12"><label class="form-label">纠正措施</label><textarea name="corrective_action" class="form-control" rows="2">{{ issue.corrective_action if issue else '' }}</textarea></div>
+    <div class="col-12"><button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> 保存</button> <a href="{{ url_for('quality_issues.list_issues') }}" class="btn btn-secondary">取消</a></div>
+</form>
+{% endblock %}

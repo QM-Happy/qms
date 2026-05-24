@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}提交数据{% endblock %}
+{% block content %}
+<h4><i class="bi bi-send"></i> 提交数据</h4><hr>
+<form method="POST" class="row g-3">
+    <div class="col-md-4"><label class="form-label">提交类型</label>
+        <select name="submission_type" class="form-select">
+            <option value="8D_report">8D报告</option>
+            <option value="inspection_report">检验报告</option>
+            <option value="corrective_action">纠正措施</option>
+            <option value="other">其他</option>
+        </select>
+    </div>
+    <div class="col-md-4"><label class="form-label">标题 <span class="text-danger">*</span></label><input type="text" name="title" class="form-control" required></div>
+    <div class="col-md-4"><label class="form-label">提交日期</label><input type="date" name="submitted_date" class="form-control"></div>
+    <div class="col-12"><label class="form-label">内容</label><textarea name="content" class="form-control" rows="8"></textarea></div>
+    <div class="col-12"><button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> 提交</button> <a href="{{ url_for('supplier.portal') }}" class="btn btn-secondary">取消</a></div>
+</form>
+{% endblock %}

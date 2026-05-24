@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}封样管理{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4><i class="bi bi-archive"></i> 封样管理</h4>
+    <a href="{{ url_for('sealed_samples.new_sample') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> 新建封样</a>
+</div>
+<form class="row g-2 mb-3" method="GET">
+    <div class="col-md-4"><input type="text" name="search" class="form-control" placeholder="搜索编号/样品名称..." value="{{ search }}"></div>
+    <div class="col-auto"><button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i> 搜索</button></div>
+</form>
+<table class="table table-hover table-bordered">
+    <thead class="table-light">
+        <tr><th>封样编号</th><th>样品名称</th><th>供应商</th><th>产品编码</th><th>封样日期</th><th>存放位置</th><th>数量</th><th>状态</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+        {% for s in samples.items %}
+        <tr>
+            <td>{{ s.sample_no }}</td><td>{{ s.sample_name }}</td><td>{{ s.supplier.name if s.supplier else '-' }}</td>
+            <td>{{ s.product_code }}</td><td>{{ s.seal_date }}</td><td>{{ s.storage_location }}</td>
+            <td>{{ s.sample_qty }}</td>
+            <td><span class="badge bg-{{ 'success' if s.status=='active' else 'secondary' if s.status=='returned' else 'danger' }}">{{ s.status }}</span></td>
+            <td>
+                <a href="{{ url_for('sealed_samples.edit_sample', id=s.id) }}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
+                <form method="POST" action="{{ url_for('sealed_samples.delete_sample', id=s.id) }}" style="display:inline" data-confirm="确认删除？">
+                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+        {% else %}<tr><td colspan="9" class="text-center text-muted">暂无记录</td></tr>{% endfor %}
+    </tbody>
+</table>
+{% if samples.pages > 1 %}
+<nav><ul class="pagination">
+    {% for p in samples.iter_pages() %}{% if p %}<li class="page-item {{ 'active' if p==samples.page }}"><a class="page-link" href="?page={{ p }}&search={{ search }}">{{ p }}</a></li>{% else %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}{% endfor %}
+</ul></nav>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+[Unit]
+Description=QMS Quality Management System
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/qms
+Environment="PATH=/usr/bin"
+Environment="SECRET_KEY=QMS-Production-Secret-Key-Change-Me-2025"
+ExecStart=/usr/local/bin/gunicorn --workers 4 --bind 127.0.0.1:8000 app:create_app()
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

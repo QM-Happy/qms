@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{% if sample %}编辑{% else %}新建{% endif %} 封样记录{% endblock %}
+{% block content %}
+<h4>{% if sample %}编辑{% else %}新建{% endif %} 封样记录</h4><hr>
+<form method="POST" class="row g-3">
+    <div class="col-md-4"><label class="form-label">封样编号 <span class="text-danger">*</span></label><input type="text" name="sample_no" class="form-control" value="{{ sample.sample_no if sample else '' }}" required></div>
+    <div class="col-md-4"><label class="form-label">样品名称 <span class="text-danger">*</span></label><input type="text" name="sample_name" class="form-control" value="{{ sample.sample_name if sample else '' }}" required></div>
+    <div class="col-md-4"><label class="form-label">供应商</label>
+        <select name="supplier_id" class="form-select">
+            <option value="">-- 选择 --</option>
+            {% for s in suppliers %}<option value="{{ s.id }}" {{ 'selected' if sample and sample.supplier_id==s.id }}>{{ s.name }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4"><label class="form-label">产品编码</label><input type="text" name="product_code" class="form-control" value="{{ sample.product_code if sample else '' }}"></div>
+    <div class="col-md-3"><label class="form-label">封样日期</label><input type="date" name="seal_date" class="form-control" value="{{ sample.seal_date if sample else '' }}"></div>
+    <div class="col-md-3"><label class="form-label">存放位置</label><input type="text" name="storage_location" class="form-control" value="{{ sample.storage_location if sample else '' }}"></div>
+    <div class="col-md-2"><label class="form-label">数量</label><input type="number" name="sample_qty" class="form-control" value="{{ sample.sample_qty if sample else '' }}"></div>
+    <div class="col-md-3"><label class="form-label">状态</label>
+        <select name="status" class="form-select">
+            <option value="active" {{ 'selected' if sample and sample.status=='active' }}>有效</option>
+            <option value="returned" {{ 'selected' if sample and sample.status=='returned' }}>已归还</option>
+            <option value="scrapped" {{ 'selected' if sample and sample.status=='scrapped' }}>已报废</option>
+        </select>
+    </div>
+    <div class="col-md-3"><label class="form-label">备注</label><input type="text" name="remark" class="form-control" value="{{ sample.remark if sample else '' }}"></div>
+    <div class="col-12"><button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> 保存</button> <a href="{{ url_for('sealed_samples.list_samples') }}" class="btn btn-secondary">取消</a></div>
+</form>
+{% endblock %}

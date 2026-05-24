@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{% if record %}编辑{% else %}新建{% endif %} 认证记录{% endblock %}
+{% block content %}
+<h4>{% if record %}编辑{% else %}新建{% endif %} 认证与测试记录</h4><hr>
+<form method="POST" class="row g-3">
+    <div class="col-md-4"><label class="form-label">认证编号 <span class="text-danger">*</span></label><input type="text" name="cert_no" class="form-control" value="{{ record.cert_no if record else '' }}" required></div>
+    <div class="col-md-4"><label class="form-label">认证类型</label><input type="text" name="cert_type" class="form-control" value="{{ record.cert_type if record else '' }}" placeholder="UL / CE / FCC / RoHS ..."></div>
+    <div class="col-md-4"><label class="form-label">产品名称</label><input type="text" name="product_name" class="form-control" value="{{ record.product_name if record else '' }}"></div>
+    <div class="col-md-4"><label class="form-label">认证机构</label><input type="text" name="cert_body" class="form-control" value="{{ record.cert_body if record else '' }}"></div>
+    <div class="col-md-2"><label class="form-label">签发日期</label><input type="date" name="issue_date" class="form-control" value="{{ record.issue_date if record else '' }}"></div>
+    <div class="col-md-2"><label class="form-label">到期日期</label><input type="date" name="expiry_date" class="form-control" value="{{ record.expiry_date if record else '' }}"></div>
+    <div class="col-md-2"><label class="form-label">状态</label>
+        <select name="status" class="form-select">
+            <option value="valid" {{ 'selected' if record and record.status=='valid' }}>有效</option>
+            <option value="expiring" {{ 'selected' if record and record.status=='expiring' }}>即将到期</option>
+            <option value="expired" {{ 'selected' if record and record.status=='expired' }}>已过期</option>
+        </select>
+    </div>
+    <div class="col-md-2"><label class="form-label">备注</label><input type="text" name="remark" class="form-control" value="{{ record.remark if record else '' }}"></div>
+    <div class="col-12"><button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> 保存</button> <a href="{{ url_for('certification.list_records') }}" class="btn btn-secondary">取消</a></div>
+</form>
+{% endblock %}

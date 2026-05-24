@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{% if record %}编辑{% else %}新建{% endif %} Nexfactory 记录{% endblock %}
+{% block content %}
+<h4>{% if record %}编辑{% else %}新建{% endif %} Nexfactory 记录</h4><hr>
+<form method="POST" class="row g-3">
+    <div class="col-md-4"><label class="form-label">记录类型</label><input type="text" name="record_type" class="form-control" value="{{ record.record_type if record else '' }}"></div>
+    <div class="col-md-4"><label class="form-label">标题 <span class="text-danger">*</span></label><input type="text" name="title" class="form-control" value="{{ record.title if record else '' }}" required></div>
+    <div class="col-md-4"><label class="form-label">日期</label><input type="date" name="record_date" class="form-control" value="{{ record.record_date if record else '' }}"></div>
+    <div class="col-12"><label class="form-label">内容</label><textarea name="content" class="form-control" rows="6">{{ record.content if record else '' }}</textarea></div>
+    <div class="col-12"><button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> 保存</button> <a href="{{ url_for('nexfactory.index') }}" class="btn btn-secondary">取消</a></div>
+</form>
+{% endblock %}

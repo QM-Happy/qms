@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{% if supplier %}编辑{% else %}添加{% endif %} 供应商{% endblock %}
+{% block content %}
+<h4>{% if supplier %}编辑{% else %}添加{% endif %} 供应商</h4><hr>
+<form method="POST" class="row g-3">
+    <div class="col-md-4"><label class="form-label">供应商编号 <span class="text-danger">*</span></label><input type="text" name="code" class="form-control" value="{{ supplier.code if supplier else '' }}" required></div>
+    <div class="col-md-4"><label class="form-label">供应商名称 <span class="text-danger">*</span></label><input type="text" name="name" class="form-control" value="{{ supplier.name if supplier else '' }}" required></div>
+    <div class="col-md-4"><label class="form-label">联系人</label><input type="text" name="contact_person" class="form-control" value="{{ supplier.contact_person if supplier else '' }}"></div>
+    <div class="col-md-3"><label class="form-label">联系电话</label><input type="text" name="contact_phone" class="form-control" value="{{ supplier.contact_phone if supplier else '' }}"></div>
+    <div class="col-md-3"><label class="form-label">邮箱</label><input type="email" name="contact_email" class="form-control" value="{{ supplier.contact_email if supplier else '' }}"></div>
+    <div class="col-md-6"><label class="form-label">地址</label><input type="text" name="address" class="form-control" value="{{ supplier.address if supplier else '' }}"></div>
+    {% if supplier %}
+    <div class="col-md-3"><div class="form-check mt-4"><input type="checkbox" name="is_active" class="form-check-input" id="isActive" {{ 'checked' if supplier.is_active }}><label class="form-check-label" for="isActive">活跃状态</label></div></div>
+    {% endif %}
+    <div class="col-12"><button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> 保存</button> <a href="{{ url_for('supplier.manage_suppliers') }}" class="btn btn-secondary">取消</a></div>
+</form>
+{% endblock %}
