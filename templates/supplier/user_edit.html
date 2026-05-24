@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}编辑用户 — {{ u.username }}{% endblock %}
+{% block content %}
+<h4><i class="bi bi-pencil"></i> 编辑用户 — {{ u.username }}</h4><hr>
+<form method="POST" class="row g-3">
+    <div class="col-md-4">
+        <label class="form-label">用户名</label>
+        <input type="text" class="form-control" value="{{ u.username }}" disabled>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">显示名称 <span class="text-danger">*</span></label>
+        <input type="text" name="display_name" class="form-control" value="{{ u.display_name }}" required>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">新密码 <small class="text-muted">(留空不修改)</small></label>
+        <input type="password" name="password" class="form-control" minlength="6">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">角色</label>
+        <select name="role" class="form-select" required>
+            {% for role_val in ['admin','iqc_staff','fqc_staff','qa_staff','data_staff','sealed_admin','supplier','nexfactory','viewer'] %}
+            <option value="{{ role_val }}" {{ 'selected' if u.role == role_val }}>{{ role_val }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">绑定供应商</label>
+        <select name="supplier_id" class="form-select">
+            <option value="">-- 无 --</option>
+            {% for s in suppliers %}
+            <option value="{{ s.id }}" {{ 'selected' if u.supplier_id == s.id }}>{{ s.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <div class="form-check mt-4">
+            <input type="checkbox" name="is_active" class="form-check-input" id="isActive" {{ 'checked' if u.is_active }}>
+            <label class="form-check-label" for="isActive">活跃状态</label>
+        </div>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> 保存</button>
+        <a href="{{ url_for('supplier.manage_users') }}" class="btn btn-secondary">取消</a>
+    </div>
+</form>
+{% endblock %}

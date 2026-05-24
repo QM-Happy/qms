@@ -143,3 +143,37 @@ def new_user():
     db.session.commit()
     flash('用户创建成功', 'success')
     return redirect(url_for('supplier.manage_users'))
+
+@supplier_bp.route('/manage-users/<int:id>/edit', methods=['GET', 'POST'])
+@login_required
+@role_required('admin')
+def edit_user(id):
+    from models import User
+    user = User.query.get_or_404(id)
+    if request.method == 'POST':
+        user.display_name = request.form['display_name']
+        user.role = request.form['role']
+        user.supplier_id = int(request.form['supplier_id']) if request.form.get('supplier_id') else None
+        if request.form.get('password'):
+            user.set_password(request.form['password'])
+        user.is_active = 'is_active' in request.form
+        db.session.commit()
+        flash('用户更新成功', 'success')
+        return redirect(url_for('supplier.manage_users'))
+    all_suppliers = Supplier.query.filter_by(is_active=True).order_by(Supplier.name).all()
+    return render_template('supplier/user_edit.html', u=user, suppliers=all_suppliers,
+                           modules=get_allowed_modules(current_user))
+
+@supplier_bp.route('/manage-users/<int:id>/toggle', methods=['POST'])
+@login_required
+@role_required('admin')
+def toggle_user(id):
+    from models import User
+    user = User.query.get_or_404(id)
+    if user.id == current_user.id:
+        flash('不能停用自己', 'danger')
+    else:
+        user.is_active = not user.is_active
+        db.session.commit()
+        flash('用户状态已更新', 'success')
+    return redirect(url_for('supplier.manage_users'))

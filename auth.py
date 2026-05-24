@@ -57,3 +57,23 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
+@auth_bp.route('/change-password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    if request.method == 'POST':
+        old_pw = request.form.get('old_password', '')
+        new_pw = request.form.get('new_password', '')
+        confirm = request.form.get('confirm_password', '')
+        if not current_user.check_password(old_pw):
+            flash('原密码错误', 'danger')
+        elif len(new_pw) < 6:
+            flash('新密码至少6位', 'danger')
+        elif new_pw != confirm:
+            flash('两次输入的新密码不一致', 'danger')
+        else:
+            current_user.set_password(new_pw)
+            db.session.commit()
+            flash('密码修改成功', 'success')
+            return redirect(url_for('main.dashboard'))
+    return render_template('change_password.html', modules=get_allowed_modules(current_user))
