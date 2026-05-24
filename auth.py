@@ -48,7 +48,12 @@ def login():
         if user and user.check_password(password):
             login_user(user, remember=True)
             next_page = request.args.get('next')
-            return redirect(next_page or url_for('main.dashboard'))
+            if next_page:
+                return redirect(next_page)
+            # 供应商直接进门户，其他用户进仪表盘
+            if user.role == 'supplier':
+                return redirect(url_for('supplier.portal'))
+            return redirect(url_for('main.dashboard'))
         flash('用户名或密码错误', 'danger')
     return render_template('login.html')
 
